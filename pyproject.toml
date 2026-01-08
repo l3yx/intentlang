@@ -1,6 +1,6 @@
 [project]
 name = "intentlang"
-version = "0.2.2"
+version = "0.2.3"
 description = "https://github.com/l3yx/intentlang"
 readme = "README.md"
 authors = [
