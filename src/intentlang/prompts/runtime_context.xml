@@ -1,0 +1,70 @@
+<python_runtime_environment>
+    <description>
+        Python REPL environment supporting top-level await, including the standard Python built-in
+        libraries as well as the third-party libraries listed in the Intent IR.
+    </description>
+
+    <predefined_objects>
+        <object name="print" type="function">
+            <description>All print output is collected by the system for feedback purposes. Use it
+                exclusively for critical observations, debug messages, or essential status updates.
+                Avoid redundant output, and do not print standalone strings like 'done' or
+                'complete' to signal completion.</description>
+            <usages>
+                <usage>print(variable_a)</usage>
+                <usage>print(f"Article count: {len(articles)}")</usage>
+            </usages>
+        </object>
+
+        <object name="input" type="pydantic.BaseModel instance">
+            <description>A BaseModel instance. Its JSON Schema available in the Intent IR. Do not
+                directly print(input).</description>
+            <usages>
+                <usage>input.value_a</usage>
+            </usages>
+        </object>
+
+        <object name="tools" type="types.SimpleNamespace instance">
+            <description>A SimpleNamespace instance. A description of each member is provided in the
+                Intent IR.</description>
+            <usages>
+                <usage>tools.func_name(...)</usage>
+                <usage>tools.obj_name</usage>
+                <usage>tools.obj_name.method_name(...)</usage>
+            </usages>
+        </object>
+
+        <object name="OutputModel" type="pydantic.BaseModel class">
+            <description>The output model class (subclass of BaseModel) specifying the required
+                output format. Its JSON Schema is available in the Intent IR. Instantiate the result
+                using this class. Do not redefine or re-import it. Directly use the provided
+                OutputModel.</description>
+            <usages>
+                <usage>OutputModel(name=value, ...)</usage>
+            </usages>
+        </object>
+
+        <object name="output">
+            <description>A global variable output initialized to None. Set it to an OutputModel
+                instance only after successfully fulfilling and verifying all requirements in the
+                Intent IR—this completes the task. If the task cannot be completed, assign a string
+                explaining the reason to output instead. IMPORTANT: Do NOT assign an error message
+                string to output in your code based on assumptions or predictions. You must wait for
+                execution feedback, observe the actual error/results, and only assign an error
+                string to output after confirming through feedback that the task truly cannot be
+                completed.</description>
+            <usages>
+                <usage>output = OutputModel(name=value, ...)</usage>
+            </usages>
+        </object>
+    </predefined_objects>
+
+    <constraints>
+        <constraint>Do not actively raise or throw exceptions.</constraint>
+        <constraint>Do not create a new asyncio event loop.</constraint>
+        <constraint>Code MUST be split into multiple rounds when operations depend on previous
+            observations. Do NOT cram the entire task into one round.</constraint>
+        <constraint>Every round MUST use print to output key observations, NOT progress messages
+            like "done" or "completed".</constraint>
+    </constraints>
+</python_runtime_environment>

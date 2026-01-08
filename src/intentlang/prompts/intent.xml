@@ -1,0 +1,31 @@
+<intent>
+
+<goal>
+{{ goal }}
+</goal>
+
+<contexts>
+{{ ctxs }}
+</contexts>
+
+<tools>
+{{ tools }}
+</tools>
+
+<input_schema>
+{{ input_schema }}
+</input_schema>
+
+<how>
+{{ how }}
+</how>
+
+<rules>
+{{ rules }}
+</rules>
+
+<output_schema>
+{{ output_schema }}
+</output_schema>
+
+</intent>

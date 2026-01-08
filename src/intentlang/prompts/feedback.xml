@@ -1,0 +1,9 @@
+<feedback>
+<prints>
+{{ prints }}
+</prints>
+
+<error>
+{{ error }}
+</error>
+</feedback>
