@@ -11,13 +11,15 @@ class MagicIntent:
 
     def __init__(self, goal: str):
         self.intent = Intent().goal(goal)
+        self._result: Any = None
+        self._executed: bool = False
 
     def o(self, type: Type) -> "MagicIntent":
         self.intent.output(result=(type, ""))
         return self
 
-    def i(self, data: Any) -> "MagicIntent":
-        self.intent.input(data=(data, ""))
+    def i(self, obj: Any) -> "MagicIntent":
+        self.intent.input(obj=(obj, f"type: {type(obj)}"))
         return self
 
     def c(self, ctxs: str | list[str]) -> "MagicIntent":
@@ -43,11 +45,186 @@ class MagicIntent:
         return self
 
     def __call__(self) -> Any:
-        return self.intent.compile(
-            max_iterations=MagicIntent._max_iterations,
-            cache=MagicIntent._cache,
-            record=MagicIntent._record
-        ).run_sync().output.result
+        if not self._executed:
+            if not self.intent._output:
+                self.intent.output(result=(bool, "success"))
+            self._result = self.intent.compile(
+                max_iterations=MagicIntent._max_iterations,
+                cache=MagicIntent._cache,
+                record=MagicIntent._record
+            ).run_sync().output.result
+            self._executed = True
+        return self._result
+
+    def __bool__(self) -> bool:
+        return bool(self())
+
+    def __int__(self) -> int:
+        return int(self())
+
+    def __float__(self) -> float:
+        return float(self())
+
+    def __str__(self) -> str:
+        return str(self())
+
+    def __repr__(self) -> str:
+        return repr(self())
+
+    def __len__(self) -> int:
+        return len(self())
+
+    def __iter__(self):
+        return iter(self())
+
+    def __contains__(self, item):
+        return item in self()
+
+    def __getitem__(self, key):
+        return self()[key]
+
+    def __setitem__(self, key, value):
+        self()[key] = value
+
+    def __delitem__(self, key):
+        del self()[key]
+
+    def __getattr__(self, name):
+        return getattr(self(), name)
+
+    def __add__(self, other):
+        return self() + other
+
+    def __radd__(self, other):
+        return other + self()
+
+    def __sub__(self, other):
+        return self() - other
+
+    def __rsub__(self, other):
+        return other - self()
+
+    def __mul__(self, other):
+        return self() * other
+
+    def __rmul__(self, other):
+        return other * self()
+
+    def __truediv__(self, other):
+        return self() / other
+
+    def __rtruediv__(self, other):
+        return other / self()
+
+    def __floordiv__(self, other):
+        return self() // other
+
+    def __rfloordiv__(self, other):
+        return other // self()
+
+    def __mod__(self, other):
+        return self() % other
+
+    def __rmod__(self, other):
+        return other % self()
+
+    def __pow__(self, other, modulo=None):
+        if modulo is not None:
+            return pow(self(), other, modulo)
+        return self() ** other
+
+    def __rpow__(self, other):
+        return other ** self()
+
+    def __lt__(self, other):
+        return self() < other
+
+    def __le__(self, other):
+        return self() <= other
+
+    def __eq__(self, other):
+        return self() == other
+
+    def __ne__(self, other):
+        return self() != other
+
+    def __gt__(self, other):
+        return self() > other
+
+    def __ge__(self, other):
+        return self() >= other
+
+    def __and__(self, other):
+        return self() & other
+
+    def __rand__(self, other):
+        return other & self()
+
+    def __or__(self, other):
+        return self() | other
+
+    def __ror__(self, other):
+        return other | self()
+
+    def __xor__(self, other):
+        return self() ^ other
+
+    def __rxor__(self, other):
+        return other ^ self()
+
+    def __invert__(self):
+        return ~self()
+
+    def __lshift__(self, other):
+        return self() << other
+
+    def __rlshift__(self, other):
+        return other << self()
+
+    def __rshift__(self, other):
+        return self() >> other
+
+    def __rrshift__(self, other):
+        return other >> self()
+
+    def __bytes__(self) -> bytes:
+        return bytes(self())
+
+    def __complex__(self) -> complex:
+        return complex(self())
+
+    def __index__(self) -> int:
+        return self().__index__()
+
+    def __neg__(self):
+        return -self()
+
+    def __pos__(self):
+        return +self()
+
+    def __abs__(self):
+        return abs(self())
+
+    def __divmod__(self, other):
+        return divmod(self(), other)
+
+    def __rdivmod__(self, other):
+        return divmod(other, self())
+
+    def __matmul__(self, other):
+        return self() @ other
+
+    def __rmatmul__(self, other):
+        return other @ self()
+
+    def __reversed__(self):
+        return reversed(self())
+
+    def __format__(self, format_spec):
+        return format(self(), format_spec)
+
+    def __hash__(self):
+        return hash(self())
 
     @classmethod
     def hack_str(cls, max_iterations: int = 30, cache: bool = False, record: bool = True):
