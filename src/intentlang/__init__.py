@@ -3,6 +3,7 @@ from pathlib import Path
 
 from .intent import Intent
 from .models import IntentIO
+from .magic import MagicIntent
 from .engines import (
     LLMConfig,
     LLMEngineFactory,
@@ -22,5 +23,6 @@ if not any(os.getenv(v) for v in _env_vars_to_check):
 __all__ = [
     "Intent",
     "IntentIO",
+    "MagicIntent",
     "LLMConfig", "LLMEngineFactory"
 ]
